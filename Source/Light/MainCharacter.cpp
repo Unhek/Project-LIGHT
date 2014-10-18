@@ -14,7 +14,12 @@ AMainCharacter::AMainCharacter(const class FPostConstructInitializeProperties& P
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
+
+	bIsRunning = false;
 	MaxHunger = 500.f;
+	MaxStamina = 100.f;
+
+	timer = 5;
 
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
@@ -23,6 +28,9 @@ AMainCharacter::AMainCharacter(const class FPostConstructInitializeProperties& P
 
 	//CurrentHunger variables
 	CurrentHunger = MaxHunger;
+
+	//Stamina Variables
+	CurrentStamina = MaxStamina;
 
 	SpeedFactor = 0.5f;
 	BaseSpeed = 1.f;
@@ -40,13 +48,30 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompo
 	InputComponent->BindAction("Use", IE_Pressed, this, &AMainCharacter::Use);
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 
+	InputComponent->BindAction("Run", IE_Pressed, this, &AMainCharacter::OnRun);
+	InputComponent->BindAction("Run", IE_Released, this, &AMainCharacter::EndRun);
+
 	InputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
-	
+
 	InputComponent->BindAxis("TurnAtRate", this, &AMainCharacter::TurnAtRate);
 	InputComponent->BindAxis("LookUpAtRate", this, &AMainCharacter::LookUpAtRate);
-		
+
 }
+
+/*For Sprinting*/
+void AMainCharacter::OnRun()
+{
+	bIsRunning = true;
+	
+}
+
+void AMainCharacter::EndRun()
+{
+	bIsRunning = false;
+
+}
+
 
 void AMainCharacter::MoveForward(float Value)
 {
@@ -95,20 +120,20 @@ void AMainCharacter::Use()
 
 
 	float FoodQuality = 0;
-	
+
 	//Get all overlapping actors and store them in an array
 	TArray<AActor*> CollectedActors;
 	CollectionSphere->GetOverlappingActors(CollectedActors);
 	
 
 	//for each actor collected
-	for(int32 iCollected = 0; iCollected < CollectedActors.Num(); ++iCollected)
+	for (int32 iCollected = 0; iCollected < CollectedActors.Num(); ++iCollected)
 	{
 		//Cast actor to AFood
 		AFood* const TestFood = Cast<AFood>(CollectedActors[iCollected]);
-		
+
 		//if cast is succes and food is active
-		if(TestFood && !TestFood->IsPendingKill() && TestFood->bIsActive)
+		if (TestFood && !TestFood->IsPendingKill() && TestFood->bIsActive)
 		{
 			FoodQuality = FoodQuality + TestFood->FoodQuality;
 			TestFood->OnPickedUp();
@@ -120,7 +145,7 @@ void AMainCharacter::Use()
 
 	}
 
-	if(FoodQuality > 0.f)
+	if (FoodQuality > 0.f)
 	{
 		//Eat(FoodQuality);
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, "yumyum");
@@ -133,6 +158,18 @@ void AMainCharacter::Use()
 
 }
 
+<<<<<<< HEAD
+/* These 2 functions effect sprinting and stamina */
+void AMainCharacter::OnSprintCooldown(){
+	bSprintCoolDown = true;
+	CharacterMovement->MaxWalkSpeed = 100;
+	this->GetWorldTimerManager().SetTimer(this, &AMainCharacter::EndSprintCooldown, 3.0f, false);
+}
+
+void AMainCharacter::EndSprintCooldown(){
+	bSprintCoolDown = false;
+	CharacterMovement->MaxWalkSpeed = 600;
+=======
 bool AMainCharacter::IsItemInTarget(FHitResult* RV_Hit, FCollisionQueryParams* RV_TraceParams)
 {
 	if(Controller == NULL) return 0;
@@ -165,6 +202,7 @@ bool AMainCharacter::IsItemInTarget(FHitResult* RV_Hit, FCollisionQueryParams* R
 		return DidTrace;
 	
 	
+>>>>>>> origin/master
 }
 
 void AMainCharacter::Tick(float DeltaSeconds)
@@ -173,5 +211,57 @@ void AMainCharacter::Tick(float DeltaSeconds)
 	//CharacterMovement->MaxWalkSpeed = SpeedFactor * CurrentHunger + BaseSpeed;
 
 	CurrentHunger -= 1 * GetWorld()->GetDeltaSeconds();
+<<<<<<< HEAD
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, FString::SanitizeFloat(CurrentHunger));
+
+
+	// If cooldown is active regen stamina for the duration
+	if (bSprintCoolDown == true)
+	{
+		CurrentStamina += 10 * GetWorld()->GetDeltaSeconds();
+	}
+
+	//You can only run while pressing shift and if cooldown isnt active
+	if (bIsRunning == true && bSprintCoolDown == false)
+	{
+
+		if (CurrentStamina > 0 )
+		{
+			CharacterMovement->MaxWalkSpeed = 1200;
+			CurrentStamina -= 10 * GetWorld()->GetDeltaSeconds();
+
+		}
+
+		if (CurrentStamina <= 0)
+		{
+			OnSprintCooldown();
+		}
+
+	}
+
+	//Regen Stamina if not holding shift
+	if (bIsRunning == false)
+	{
+		if (bSprintCoolDown == false)
+		{
+			if (bSprintCoolDown == false)
+			{
+				CharacterMovement->MaxWalkSpeed = 600;
+			}
+
+			if (CurrentStamina < MaxStamina && bSprintCoolDown == false)
+			{
+				CurrentStamina += 10 * GetWorld()->GetDeltaSeconds();
+
+				if (CurrentStamina > MaxStamina)
+				{
+
+					CurrentStamina = MaxStamina;
+				}
+			}
+		}
+	}
+=======
 	
+>>>>>>> origin/master
 }
