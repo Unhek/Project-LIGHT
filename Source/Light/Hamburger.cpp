@@ -14,7 +14,6 @@ AHamburger::AHamburger(const class FPostConstructInitializeProperties& PCIP)
 void AHamburger::ReceiveActorBeginOverlap(class AActor* Other)
 {
 	Super::ReceiveActorBeginOverlap(Other);
-	
 	PickupOnTouch(Cast<AMainCharacter>(Other));
 }
 
