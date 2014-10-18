@@ -27,9 +27,12 @@ class LIGHT_API AMainCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
 	TSubobjectPtr<class USphereComponent> CollectionSphere;
 
-	/** Character hunger level */
+	/** Character CurrentHunger level */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character)
-	float Hunger;
+	float CurrentHunger;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Character)
+		float MaxHunger;
 
 	virtual void Tick(float DeltaSeconds) override;
 

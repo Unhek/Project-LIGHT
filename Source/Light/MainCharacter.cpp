@@ -14,13 +14,15 @@ AMainCharacter::AMainCharacter(const class FPostConstructInitializeProperties& P
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
+	MaxHunger = 500.f;
+
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->AttachParent = CapsuleComponent;
 	FirstPersonCameraComponent->RelativeLocation = FVector(0, 0, 64.f); // Position the camera
 
-	//Hunger variables
-	Hunger = 500.f;
+	//CurrentHunger variables
+	CurrentHunger = MaxHunger;
 
 	SpeedFactor = 0.5f;
 	BaseSpeed = 1.f;
@@ -106,8 +108,8 @@ void AMainCharacter::Use()
 		//Eat(FoodQuality);
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, "yumyum");
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, FString::SanitizeFloat(FoodQuality));
-		Hunger += FoodQuality;
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, FString::SanitizeFloat(Hunger));
+		CurrentHunger += FoodQuality;
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, FString::SanitizeFloat(CurrentHunger));
 
 	}
 
@@ -117,7 +119,7 @@ void AMainCharacter::Use()
 void AMainCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	//CharacterMovement->MaxWalkSpeed = SpeedFactor * Hunger + BaseSpeed;
-	//Hunger -= 1 * GetWorld()->GetDeltaSeconds();
-	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, FString::SanitizeFloat(Hunger));
+	//CharacterMovement->MaxWalkSpeed = SpeedFactor * CurrentHunger + BaseSpeed;
+	CurrentHunger -= 1 * GetWorld()->GetDeltaSeconds();
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, FString::SanitizeFloat(CurrentHunger));
 }

@@ -21,7 +21,7 @@ void AHamburger::PickupOnTouch(class AMainCharacter* Pawn)
 {
 	if(Pawn)
 	{
-		Pawn->Hunger = 1000;
+		Pawn->CurrentHunger = 1000;
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Red, TEXT("Picked up"));
 	}
 
