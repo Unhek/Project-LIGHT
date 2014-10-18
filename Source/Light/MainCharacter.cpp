@@ -78,11 +78,28 @@ void AMainCharacter::TurnAtRate(float Rate)
 
 void AMainCharacter::Use()
 {
+	if (Controller == NULL) return;
+
+	//trace object
+	FHitResult RV_Hit(ForceInit);
+	FCollisionQueryParams RV_TraceParams = FCollisionQueryParams(FName(TEXT("RV_Trace")), true, this);
+	bool hitornot = IsItemInTarget(&RV_Hit, &RV_TraceParams);
+	//IsItemInTarget(&RV_Hit, &RV_TraceParams);
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Blue, RV_Hit.Location.ToString());
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Yellow, hitornot ? TEXT("true") : TEXT ("false"));
+	AActor* check = Cast<AActor>(RV_Hit.GetActor());
+	if (check) 
+		GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Red, TEXT ("TARGET HIT PICKUP"));
+
+
 	float FoodQuality = 0;
 	
 	//Get all overlapping actors and store them in an array
 	TArray<AActor*> CollectedActors;
 	CollectionSphere->GetOverlappingActors(CollectedActors);
+	
 
 	//for each actor collected
 	for(int32 iCollected = 0; iCollected < CollectedActors.Num(); ++iCollected)
@@ -116,10 +133,45 @@ void AMainCharacter::Use()
 
 }
 
+bool AMainCharacter::IsItemInTarget(FHitResult* RV_Hit, FCollisionQueryParams* RV_TraceParams)
+{
+	if(Controller == NULL) return 0;
+
+		//Get Camera
+		FVector CameraLoc;
+		FRotator CameraRot;
+		Controller->GetPlayerViewPoint(CameraLoc, CameraRot);
+
+		
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Cyan, CameraRot.ToString());
+
+		FVector Start = CameraLoc;
+		//replace 1000000 with PlayerInteractionDistance
+		FVector End = CameraLoc + (CameraRot.Vector() * 1000000);
+
+		const FName TraceTagYouWantToVisualize("mytracetag");
+
+		UWorld* World = GetWorld();
+		World->DebugDrawTraceTag = TraceTagYouWantToVisualize;
+		
+		RV_TraceParams->bTraceComplex = true;
+		RV_TraceParams->bTraceAsyncScene = true;
+		RV_TraceParams->bReturnPhysicalMaterial = true;
+		RV_TraceParams->TraceTag = TraceTagYouWantToVisualize;
+
+		//do the trace
+		bool DidTrace = GetWorld()->LineTraceSingle(*RV_Hit, Start, End, ECC_Pawn, *RV_TraceParams);
+		
+		return DidTrace;
+	
+	
+}
+
 void AMainCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	//CharacterMovement->MaxWalkSpeed = SpeedFactor * CurrentHunger + BaseSpeed;
+
 	CurrentHunger -= 1 * GetWorld()->GetDeltaSeconds();
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, FString::SanitizeFloat(CurrentHunger));
+	
 }

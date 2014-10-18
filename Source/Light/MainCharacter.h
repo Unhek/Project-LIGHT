@@ -67,6 +67,9 @@ protected:
 	/** Handles looing up/down */
 	void LookUpAtRate(float Rate);
 
+	/** Checks if character is targetting item */
+	bool AMainCharacter::IsItemInTarget(FHitResult* RV_Hit, FCollisionQueryParams* RV_TraceParams);
+
 	//APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 };

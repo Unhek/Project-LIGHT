@@ -21,7 +21,7 @@ APickup::APickup(const class FPostConstructInitializeProperties& PCIP)
 	PickupMesh = PCIP.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("PickupMesh"));
 
 	//Add physics to the static mesh
-	PickupMesh->SetSimulatePhysics(false);
+	PickupMesh->SetSimulatePhysics(true);
 
 	//Attach static mesh to root
 	PickupMesh->AttachTo(RootComponent);

@@ -1,6 +1,7 @@
 /Binaries
 /DerivedDataCache
 /Intermediate
+/Import
 /Saved
 *.suo
 *.sln
