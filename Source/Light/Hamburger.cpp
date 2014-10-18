@@ -25,6 +25,6 @@ void AHamburger::PickupOnTouch(class AMainCharacter* Pawn)
 	//	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Red, TEXT("Picked up"));
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Red, TEXT("Picked up"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Red, TEXT("Picked up"));
 	
 }

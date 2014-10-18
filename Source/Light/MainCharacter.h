@@ -82,6 +82,7 @@ protected:
 	/** Handles looing up/down */
 	void LookUpAtRate(float Rate);
 
+<<<<<<< HEAD
 	void OnRun();
 
 	void EndRun();
@@ -89,6 +90,10 @@ protected:
 	void OnSprintCooldown();
 
 	void EndSprintCooldown();
+=======
+	/** Checks if character is targetting item */
+	bool AMainCharacter::IsItemInTarget(FHitResult* RV_Hit, FCollisionQueryParams* RV_TraceParams);
+>>>>>>> origin/master
 
 	//APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;

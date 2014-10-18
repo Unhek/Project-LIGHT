@@ -17,6 +17,6 @@ void AFood::OnPickedUp_Implementation()
 	Super::OnPickedUp_Implementation();
 
 	//Destroy food
-	Destroy();
+	//Destroy();
 }
 
